@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="Локальный просмотр сессий, проектов и файлов источников.">
+  <title>Архив сессий</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/bootstrap.js"></script>
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">H</span><div><h1>Архив сессий</h1><p>Локальный просмотр</p></div></div>
+      <div class="top-actions"><span id="scan-time" class="subtle" aria-live="polite"></span><button id="refresh" class="button" type="button">Обновить источники</button></div>
+    </header>
+    <main class="workspace">
+      <aside class="sidebar" aria-label="Навигация">
+        <details class="navigation" open>
+          <summary>Проекты и источники</summary>
+          <nav aria-label="Проекты"><div class="nav-heading"><h2>Проекты</h2></div><div id="projects-nav" class="nav-list"></div></nav>
+          <nav aria-label="Источники"><div class="nav-heading"><h2>Источники</h2></div><div id="sources-nav" class="nav-list"></div></nav>
+          <details class="source-disclosure"><summary>Состояние источников</summary><div id="sources-list" class="sources" aria-live="polite">Загрузка источников…</div></details>
+        </details>
+      </aside>
+      <section class="list-pane" aria-labelledby="sessions-title">
+        <div class="pane-heading"><div><h2 id="sessions-title">Сессии</h2><p id="session-count" class="subtle" aria-live="polite">Загрузка сессий…</p></div></div>
+        <div class="filters">
+          <label for="search">Поиск</label><input id="search" type="search" placeholder="Название, путь, модель или ID" autocomplete="off">
+          <div class="filter-row"><label for="source-filter">Источник<select id="source-filter"><option value="">Все источники</option></select></label><label for="project-filter">Проект<select id="project-filter"><option value="">Все проекты</option></select></label></div>
+          <label id="message-filter-label" class="checkbox-filter" hidden><input id="message-filter" type="checkbox"> Только с записями</label>
+        </div>
+        <div id="list-state" class="state" role="status">Загрузка сессий…</div>
+        <ul id="session-list" class="session-list" aria-label="Сессии"></ul>
+        <button id="show-more" class="button more" type="button" hidden>Показать ещё</button>
+      </section>
+      <section class="detail-pane" aria-labelledby="detail-heading">
+        <div id="detail" class="detail-content"><div class="empty-detail"><h2 id="detail-heading">Выберите сессию</h2><p>Здесь появится история, файлы и подтверждённые связи.</p></div></div>
+      </section>
+    </main>
+  </div>
+  <div id="announcement" class="sr-only" role="status" aria-live="polite"></div>
+  <noscript><p class="noscript">Для просмотра локальных сессий требуется JavaScript.</p></noscript>
+</body>
+</html>

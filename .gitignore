@@ -1,0 +1,9 @@
+/REPORT.md
+/.local/
+*.local.json
+.env
+.env.*
+__pycache__/
+*.py[cod]
+.venv/
+.DS_Store
