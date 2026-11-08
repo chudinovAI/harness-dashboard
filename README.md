@@ -1,21 +1,21 @@
-# Панель сессий харнессов
+# Harness Session Dashboard
 
-Локальная панель для поиска сессий по проектам и харнессам, чтения истории, просмотра хранилищ и подтверждённых связей. Локальные источники не изменяются. При явной настройке сессии Hermes на VPS читаются через существующий SSH-доступ; другие внешние сервисы и телеметрия не используются.
+A local dashboard for finding sessions by project and harness, reading history, browsing storage locations, and viewing confirmed relationships. Local sources are not modified. When explicitly configured, Hermes sessions on a VPS are read over existing SSH access; no other external services or telemetry are used.
 
-## Запуск на macOS
+## Running on macOS
 
 ```sh
 cd ~/Documents/Projects/harness-dashboard
 python3 server.py
 ```
 
-Откройте адрес, выведенный в терминале: по умолчанию http://127.0.0.1:8765/. Установка Python-библиотек и сборка не нужны. Для чтения сжатых сессий DeepSeek Harness нужен `zstd` в `PATH`; если он отсутствует, панель покажет ошибку источника. Остановить сервер: `Ctrl+C`. Другой или автоматически выбранный свободный порт: `python3 server.py --port 8766` или `--port 0`.
+Open the address printed in the terminal: http://127.0.0.1:8765/ by default. No Python library installation or build is needed. Reading compressed DeepSeek Harness sessions requires `zstd` in `PATH`; if it is missing, the dashboard displays a source error. Stop the server with `Ctrl+C`. To use another port or an automatically selected free port: `python3 server.py --port 8766` or `--port 0`.
 
-Поддерживаются OMP, DeepSeek Harness, Claude Code, ZCode, Codex, OpenCode, локальный Hermes и необязательный Hermes на VPS. Без настройки удалённый источник показывает ошибку и соединение не выполняется; остальные источники продолжают работать. Для локального Claude используются стандартная папка и `CLAUDE_CONFIG_DIR/projects`, если переменная задана. Отсутствие источника не доказывает, что других профилей или путей нет.
+OMP, DeepSeek Harness, Claude Code, ZCode, Codex, OpenCode, local Hermes, and optional Hermes on a VPS are supported. Without configuration, the remote source displays an error and no connection is made; the other sources continue to work. For local Claude, the default folder and `CLAUDE_CONFIG_DIR/projects` are used if the variable is set. A missing source does not prove that no other profiles or paths exist.
 
-## Необязательная настройка Hermes на VPS
+## Optional Hermes VPS Configuration
 
-Создайте локальный файл `.local/hermes.json` с разрешениями только для владельца (`chmod 600 .local/hermes.json`). Подставьте собственный настроенный SSH alias и абсолютный путь к каталогу Hermes на удалённой машине. Пример использует фиктивные значения:
+Create a local `.local/hermes.json` file with owner-only permissions (`chmod 600 .local/hermes.json`). Substitute your own configured SSH alias and the absolute path to the Hermes directory on the remote machine. The example uses dummy values:
 
 ```json
 {
@@ -24,24 +24,24 @@ python3 server.py
 }
 ```
 
-Корень должен быть абсолютным, без `.` и `..` и без завершающего `/`. Запускайте панель с `python3 server.py --hermes-config .local/hermes.json`. **При открытии страницы панель автоматически загружает список источников и пытается подключиться к указанному VPS по SSH**; обновление списка также инициирует соединение. Без этого аргумента файл не читается автоматически и SSH не запускается. Конфигурация считывается при запуске; после изменения перезапустите панель. Неверный или недоступный файл останавливает запуск с ошибкой. Папка `.local/` исключена из Git, но файлы конфигурации в других местах необходимо защищать отдельно.
+The root must be absolute, with no `.` or `..` components and no trailing `/`. Start the dashboard with `python3 server.py --hermes-config .local/hermes.json`. **When the page is opened, the dashboard automatically loads the source list and attempts to connect to the specified VPS over SSH**; refreshing the list also initiates a connection. Without this argument, the file is not read automatically and SSH is not started. The configuration is read at startup; restart the dashboard after changing it. An invalid or inaccessible file stops startup with an error. The `.local/` folder is excluded from Git, but configuration files elsewhere must be protected separately.
 
-SSH alias должен быть заранее настроен для пакетного входа без запроса пароля; ключ хоста должен быть заранее проверен. Выполняется только фиксированный worker через SSH, данные запроса передаются в stdin. На VPS читаются только `state.db`, его WAL и файлы под `sessions/` выбранного корня; компоненты пути с симлинками не принимаются.
+The SSH alias must already be configured for batch login without a password prompt; the host key must have been verified beforehand. Only a fixed worker is run over SSH, with request data passed through stdin. On the VPS, only `state.db`, its WAL, and files under `sessions/` within the selected root are read; symlink path components are not accepted.
 
-В навигации выберите проект или источник; рядом с источником откройте «Файлы». Имена, пути, размеры и даты в известных корнях показываются для инвентаризации. Содержимое доступно только для разрешённых областей сессий и артефактов; конфигурационные и похожие на секретные файлы не открываются. Это фильтр путей и имён, а не анализ содержимого: сами сессии и разрешённые файлы могут содержать секреты. Символические ссылки не раскрываются. Удалённые файлы Hermes доступны только в папке `sessions/` выбранного корня; Finder открывает только локальные пути.
+Select a project or source in the navigation; open “Files” next to a source. Names, paths, sizes, and dates within known roots are shown for inventory purposes. Content is available only in permitted session and artifact areas; configuration files and files whose names suggest secrets cannot be opened. This is a path and filename filter, not content analysis: sessions and permitted files may themselves contain secrets. Symbolic links are not followed. Remote Hermes files are accessible only in the `sessions/` folder within the selected root; Finder opens only local paths.
 
-История, большие текстовые файлы и каталоги загружаются страницами. Курсор истории — позиция отображаемого блока: если уже прочитанная часть источника изменилась между запросами, элементы могут сдвинуться; обновите список и откройте сессию заново. Изображения PNG, JPEG, GIF и WebP внутри поддерживаемых записей отображаются, если корректны и не больше 8 МиБ; неподдерживаемые данные и недоступные файлы обозначаются. Скрытые служебные сообщения Hermes и ZCode не показываются. Текущий статус работы нельзя выводить из даты изменения файла.
+History, large text files, and directories are loaded in pages. The history cursor is the position of the displayed block: if a previously read part of the source changes between requests, items may shift; refresh the list and reopen the session. PNG, JPEG, GIF, and WebP images within supported entries are displayed if valid and no larger than 8 MiB; unsupported data and unavailable files are indicated. Hidden internal Hermes and ZCode messages are not shown. Current activity status cannot be inferred from a file's modification date.
 
-## Приватность и ограничения
+## Privacy and Limitations
 
-Сервер доступен только на `127.0.0.1`; API требует случайный токен текущего запуска и проверяет локальный Host/Origin. Markdown создаётся безопасными элементами DOM, без исполнения HTML из сессий; внешние ссылки и медиа не загружаются автоматически. Локальные приложения с правами того же пользователя по-прежнему имеют доступ к локальным данным.
+The server is accessible only at `127.0.0.1`; the API requires a random token for the current run and checks the local Host/Origin. Markdown is rendered using safe DOM elements, without executing HTML from sessions; external links and media are not loaded automatically. Local applications running with the same user's permissions still have access to local data.
 
-Для корректного чтения SQLite с WAL приложение временно создаёт приватный снимок базы и WAL на той же машине, где находится источник: локально или на VPS. Снимок может включать другие таблицы с чувствительными данными; он удаляется после штатного закрытия или ошибки, но при принудительном завершении процесса или сбое может остаться на диске. Исходная база не изменяется. База с rollback-журналом, включая неактивный PERSIST, недоступна для чтения; при изменении файлов во время снятия копии попробуйте обновить список. Размер снимка ограничен 2 GiB.
+To read SQLite with WAL correctly, the application temporarily creates a private snapshot of the database and WAL on the same machine as the source: locally or on the VPS. The snapshot may include other tables containing sensitive data; it is deleted after normal closure or an error, but may remain on disk if the process is forcibly terminated or crashes. The source database is not modified. A database with a rollback journal, including inactive PERSIST, cannot be read; if files change while the copy is being made, try refreshing the list. The snapshot size is limited to 2 GiB.
 
-## Проверка
+## Verification
 
 ```sh
 python3 -B -m unittest discover -s tests -v
 ```
 
-Интерфейс разработан с использованием app-screen рекомендаций и темы Almanac проекта [Hallmark](https://github.com/Nutlope/hallmark); лицензия воспроизведена в `HALLMARK-LICENSE`. Сетевые шрифты и изображения темы не используются.
+The interface was developed using app-screen guidance and the Almanac theme from [Hallmark](https://github.com/Nutlope/hallmark); the license is reproduced in `HALLMARK-LICENSE`. The theme's network-hosted fonts and images are not used.
