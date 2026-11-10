@@ -6,7 +6,7 @@ import re
 import stat
 from pathlib import Path
 
-import file_adapters
+from . import file_adapters
 
 PAGE_SIZE = 200
 TEXT_PAGE = 64 * 1024

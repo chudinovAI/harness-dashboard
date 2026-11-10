@@ -396,5 +396,5 @@ def _render(value):
 
 def detail(session: dict, offset=0, limit=80):
     # Imported lazily so the renderer can reuse the source security helpers.
-    import file_history
+    from . import file_history
     return file_history.detail(session, offset, limit)

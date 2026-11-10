@@ -10,7 +10,7 @@ import json
 import os
 from pathlib import Path
 
-import db_adapters as db
+from . import db_adapters as db
 
 # A block is split rather than clipped; the offset addresses the resulting chunks.
 CHUNK_CHARS = 128 * 1024

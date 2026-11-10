@@ -3,9 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="light">
+  <meta name="color-scheme" content="light dark">
   <meta name="description" content="Локальный просмотр сессий, проектов и файлов источников.">
   <title>Архив сессий</title>
+  <script src="/theme.js"></script>
   <link rel="stylesheet" href="/styles.css">
   <script src="/bootstrap.js"></script>
   <script src="/app.js" defer></script>
@@ -14,7 +15,7 @@
   <div class="app-shell">
     <header class="topbar">
       <div class="brand"><span class="brand-mark" aria-hidden="true">H</span><div><h1>Архив сессий</h1><p>Локальный просмотр</p></div></div>
-      <div class="top-actions"><span id="scan-time" class="subtle" aria-live="polite"></span><button id="refresh" class="button" type="button">Обновить источники</button></div>
+      <div class="top-actions"><span id="scan-time" class="subtle" aria-live="polite"></span><label class="theme-control" for="theme-select">Тема<select id="theme-select"><option value="system">Системная</option><option value="light">Светлая</option><option value="dark">Тёмная</option></select></label><button id="refresh" class="button" type="button">Обновить источники</button></div>
     </header>
     <main class="workspace">
       <aside class="sidebar" aria-label="Навигация">

@@ -17,7 +17,7 @@ import shutil
 import subprocess
 from collections import Counter
 
-import file_adapters
+from . import file_adapters
 
 _CHUNK = 65536
 _TEXT_CHUNK = 32768

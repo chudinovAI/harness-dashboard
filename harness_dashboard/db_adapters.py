@@ -308,5 +308,5 @@ def scan(home):
 def detail(session, offset=0, limit=80):
     """Read one page of the selected conversation from its permitted source."""
     # Imported lazily: the detail reader uses the shared secure snapshot helpers.
-    from db_details import detail as read_detail
+    from .db_details import detail as read_detail
     return read_detail(session, offset, limit)
